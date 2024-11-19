@@ -66,7 +66,7 @@
       }else if (innerWidth <= 380) { // 小屏移动端
         dropdownComponentWidth.value = '90%';
         itemHeight.value = '55px';
-        itemWidth.value = '40%';
+        itemWidth.value = '45%';
         contentPadding.value = '15px';
         boxWidth.value = '95%';
         imgMainWidth.value = '100%';

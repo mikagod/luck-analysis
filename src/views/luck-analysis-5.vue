@@ -60,7 +60,7 @@
         boxWidth.value = '95%';
         imgMainWidth.value = '100%';
         iconMainWidth.value = '10%';
-        itemGap.value = '30px';
+        itemGap.value = '15px';
         iconMainMargin.value = '0 10px';
       }else if (innerWidth <= 380) { // 小屏移动端
         dropdownComponentWidth.value = '60%';
@@ -73,6 +73,7 @@
         itemGap.value = '15px';
         iconMainMargin.value = '0 10px';
       }
+
       // 高度在所有情况下都是固定的
       dropdownComponentHeight.value = '400px';
     };
