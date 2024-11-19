@@ -73,11 +73,13 @@ function confirmHandle () {
 
         console.log('确定')
         let cicleNumber = selectedIndices.value[0]; // 数值
-        let seqNumber = global.selectedItems_five[global.selectedItems_five.length - 1] // 名称
+        let seqNumber = selectedStore.imgUrlArray.indexOf( encodeURI(global.selectedItems_five[global.selectedItems_five.length - 1]) ) + 1 // 名称
+        // console.log(`*********`, decodeURI(selectedStore.imgUrlArray))
+        // console.log(`*********`, global.selectedItems_five[global.selectedItems_five.length - 1] )
         global.selectedItems__Num.push({seqNumber, cicleNumber}); // 添加数据    ***ADD***
         global.showNumSelecte = false // 关闭弹窗
         console.log('添加选项后数组里拥有的对象',global.selectedItems__Num)
-    }else {
+    } else {
         alert('请选择数字！')
         console.log('selectedIndices 没值！')
     }
