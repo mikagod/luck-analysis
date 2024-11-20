@@ -193,7 +193,7 @@ img {
         }	
             .font-img {
                 width: 100px;
-                height: 30px;
+                height: 26px;
             }
 
 
@@ -274,7 +274,7 @@ img {
         /* 选中图标 */
         .font-img {
             width: 76px;
-            height: 22px;
+            height: 20px;
         }
     } 
 </style>
