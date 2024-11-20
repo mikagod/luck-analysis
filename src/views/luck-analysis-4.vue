@@ -45,12 +45,17 @@
           global.selectedItems__Num,
           '/api/fleeting/instructions'
         );
-        data.value = response.data.content;
+        data.value = formatContentString(response.data.content);
         console.log(data.value);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     });
+
+    // 对后端API传过来的数据进行布局处理
+    function formatContentString(content) {
+      return "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+content
+    }
 </script>
 
 <template>
@@ -75,7 +80,7 @@
                       justify-content: center; 
                       align-items: center;"
                       >
-                      <span>{{ data }}</span>
+                      <span v-html="data"></span>
                     </div>
                   </Dropdown>
               </div>

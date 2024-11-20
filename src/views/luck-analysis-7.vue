@@ -80,12 +80,28 @@
       }
     });
 
-    // 方法：格式化内容 把 \n 替换为 <br/>。  参数：数组
     const formatContentArray = (contentList) => {
-      return contentList.map(item => ({
-        ...item,
-        content: item.content.replace(/\n/g, '<br/>')
-      }));
+          return contentList.map(item => {
+        // 定义一个辅助函数来处理替换逻辑
+        const replaceContent = (content) => {
+          // 替换换行符
+          let formattedContent = content.replace(/\n/g, '<br/>');
+          
+          // 在<br/>之后的行首添加空格
+          formattedContent = formattedContent.replace(/(<br\/>)\s*/g, '$1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+          
+          // 在内容的第一行前添加缩进
+          formattedContent = `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${formattedContent}`;
+
+          return formattedContent;
+        };
+
+        // 对每个item的内容应用替换逻辑
+        return {
+          ...item,
+          content: replaceContent(item.content)
+        };
+      });
     };
     // 方法：格式化内容 把 \n 替换为 <br/> 并 手动添加了首行缩进。  参数：字符串、布尔值
     const formatContentString = (content, isTail = false, isPrefix = false) => {
@@ -93,7 +109,9 @@
 
       if (isTail) {
         // 找到第一个 <br> 标签并在其后面添加首行缩进
-        formattedContent = formattedContent.replace(/<br\/>/, '<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+        formattedContent = formattedContent
+          .replace(/<br\/>/, '<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+          .replace(/感谢你使用《数测人生》命运分析系统！/g, '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp感谢你使用《数测人生》命运分析系统！')
       }
 
       if (isPrefix) {
@@ -158,6 +176,7 @@
       font-size: 16px;
     }
     .required-content {
+      font-weight: bold;
       margin: 0px 0px 30px 0px;
     }
 
