@@ -45,7 +45,7 @@
           global.selectedItems__Num,
           '/api/fleeting/instructions'
         );
-        data.value = response;
+        data.value = response.data.content;
         console.log(data.value);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -68,7 +68,15 @@
                     <template #header-title>
                         <img src="/assets/image/img/流年运气求测须知.png" alt="图片失效">
                     </template>
-                    {{ data }}
+                    <div 
+                      style="width: 100%; 
+                      height: 100%; 
+                      display: flex; 
+                      justify-content: center; 
+                      align-items: center;"
+                      >
+                      <span>{{ data }}</span>
+                    </div>
                   </Dropdown>
               </div>
             </template>

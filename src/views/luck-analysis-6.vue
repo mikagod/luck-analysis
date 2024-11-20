@@ -1,6 +1,6 @@
 <script setup>
     // 导入 需要的库数据
-    import { ref, onUnmounted } from 'vue'; // 导入vue相关的方法
+    import { ref, onUnmounted, onMounted } from 'vue'; // 导入vue相关的方法
     import { useRouter } from 'vue-router'; // 导入路由 useRouter
     import { useGlobalStore } from '@/stores/global'; // 导入 全局状态管理实例 useGlobalStore
     import { useSelectedStore } from '@/stores/MultiSelectArraySelectedStores'; // 导入多选列表组件状态管理实例 useSelectedStore
@@ -162,6 +162,11 @@
       console.log('重选');
       router.push('/5'); // 使用路由器实例进行跳转
     }
+
+    // 浏览器点回退跟重选一个效果
+    onMounted(() => {
+      window.addEventListener('popstate', handleReSelect)
+    })
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup>
-    import { ref,onUnmounted, onMounted  } from 'vue' // 导入vue相关的方法
+    import { ref,onUnmounted, onMounted, computed } from 'vue' // 导入vue相关的方法
     import exportBtn from '/assets/image/img/Btn导出.png' // 导入“导出”图片
     import Background from '@/components/container/bg.vue' // 导入背景组件 
     import Dropdown from '@/components/container/Dropdown.vue' // 导入下拉框组件
@@ -54,9 +54,11 @@
       console.log('提交！！！');
     }
 
-
+    //*********************************************处理API数据********************************************************
     // 异步数据
-    const data = ref(null);
+    const prefix = ref(null);
+    const contentList = ref(null);
+    const tail = ref(null);
 
     // 在 mounted 生命周期钩子中调用异步函数
     onMounted(async () => {
@@ -65,12 +67,43 @@
           global.selectedItems__Num,
           '/api/fleeting/analysisReport'
         );
-        data.value = response;
-        console.log(data.value);
+        prefix.value = formatContentString(response.data.prefix, false, true);
+        contentList.value = formatContentArray(response.data.contentList);
+        tail.value = formatContentString(response.data.tail, true, false);
+
+        console.log(prefix.value);
+        contentList.value.map( contentItem => console.log(contentItem) );
+        console.log(tail.value);
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     });
+
+    // 方法：格式化内容 把 \n 替换为 <br/>。  参数：数组
+    const formatContentArray = (contentList) => {
+      return contentList.map(item => ({
+        ...item,
+        content: item.content.replace(/\n/g, '<br/>')
+      }));
+    };
+    // 方法：格式化内容 把 \n 替换为 <br/> 并 手动添加了首行缩进。  参数：字符串、布尔值
+    const formatContentString = (content, isTail = false, isPrefix = false) => {
+      let formattedContent = content.replace(/\n/g, '<br/>');
+
+      if (isTail) {
+        // 找到第一个 <br> 标签并在其后面添加首行缩进
+        formattedContent = formattedContent.replace(/<br\/>/, '<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+      }
+
+      if (isPrefix) {
+        // 找到第一个 <br> 标签并在其后面添加首行缩进
+        formattedContent = formattedContent.replace(/您/, '<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您');
+      }
+
+      return formattedContent;
+    };
+    //**************************************************************************************************************
 </script>
 
 <template>
@@ -91,7 +124,18 @@
                     <template #header-title>
                         <img src="/assets/image/img/流年分析报告.png" alt="图片失效">
                     </template>
-                    {{ data }}
+                    
+                    <div v-html="prefix" class="required-content content-api"></div>
+
+                    <div v-for="item in contentList" :key="item.id" >
+                      <div style="margin-top: 15px;">
+                        <div class="content-api"><b>{{ item.title }}</b></div>
+                        <div class="content-api" v-html="item.content"></div>
+                      </div>
+                    </div>
+
+                    <div v-html="tail" class="content-api"></div>
+                    
                   </Dropdown>
                   <div class="btn-superbox" @click="btnClick">
                     <img class="btn" :src=exportBtn alt="图片失效">
@@ -109,6 +153,14 @@
 </template>
 
 <style scoped>
+    /* 后端数据静态内容 */
+    .content-api {
+      font-size: 16px;
+    }
+    .required-content {
+      margin: 0px 0px 30px 0px;
+    }
+
     /* 页面宽高 */
     .page {
         width: 1450px;
@@ -163,6 +215,10 @@
 
     /* 小屏幕 < 768px */
     @media screen and (max-width: 767.98px) {
+        /* 后端数据静态内容 */
+        .content-api {
+          font-size: 13px;
+        }
         /* 页面 */
         .page {
         height: 700px;

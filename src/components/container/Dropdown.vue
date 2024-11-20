@@ -15,6 +15,7 @@
            height: innerHeight,
            padding:  contentPadding,
            overflow: overFlow,
+           overflowX: 'hidden'
         }">
         <slot>
 

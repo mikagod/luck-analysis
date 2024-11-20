@@ -46,12 +46,23 @@
               global.selectedItems__Num,
               '/api/fleeting/reason'
             );
-            data.value = response;
+            data.value = formatContentString(response.data.content);
             console.log(data.value);
           } catch (error) {
             console.error('Error fetching data:', error);
           }
         });
+
+        // 对后端API传过来的数据进行布局处理
+        function formatContentString(content) {
+          return "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+content
+                        .replace(/。(\s)/g, '。<br/>$1') // 使用正则表达式匹配句号后面跟着空白字符的情况
+                        .replace(/\s/g, '&nbsp;')
+                        .replace(/\n/g, '<br/>')
+                        .replace(/欢迎你利用/g, '<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp欢迎你利用')
+                        .replace(/改变自己的运气！/g, '改变自己的运气！<br/><br/><br/>')
+                        .replace(/《数测人生》/g, '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp《数测人生》')
+        }
 </script>
 
 <template>
@@ -69,7 +80,7 @@
                     <template #header-title>
                         <img src="/assets/image/img/求测前需要明白的道理.png" alt="图片失效">
                     </template>
-                    {{ data }}
+                    <div v-html="data"></div>
                   </Dropdown>
               </div>
             </template>

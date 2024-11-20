@@ -177,10 +177,11 @@ function toggleCheck(index) {
         if (global.pageNum === '5') {
             global.showNumSelecte = false; // 隐藏数选框
             // 删除数组里的对象
-            let targetValue = decodeURIComponent(props.imgUrlArray[index]); // 目标值
+            let targetValue = selectedStore.imgUrlArray.indexOf(encodeURI( props.imgUrlArray[index] ))+1; // 目标值
+
             for (let i = 0; i < global.selectedItems__Num.length; i++) {
                 // 因为 global.selectedItems__Num[i].name 是一个 白色字体 路径，所以要去掉font_selectedColor来判断是否相等
-                
+                // console.log(global.selectedItems__Num[i].seqNumber,"\n", targetValue)
                 if (global.selectedItems__Num[i].seqNumber === targetValue) {
                     console.log('取消选项后数组里拥有的对象：', global.selectedItems__Num);
                     global.selectedItems__Num.splice(i, 1); // 删除目标对象
