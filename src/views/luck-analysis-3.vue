@@ -271,7 +271,7 @@ img {
             height: 175px;
         }
 
-        /* 选中图标 */
+        /* 选中 图标 */
         .font-img {
             width: 76px;
             height: 20px;
