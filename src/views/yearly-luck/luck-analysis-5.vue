@@ -167,7 +167,7 @@ function handleNextStepBtn(event) {
     selectedStore.selectedItems = [] // 清空选中项
     selectedStore.selectedItems_whilte = [] // 清空选中项
     global.showNumSelecte = false; // 隐藏数选框
-    router.push('/6'); // 使用路由器实例进行跳转
+    router.push('/yearly-luck-6'); // 使用路由器实例进行跳转
   }
 }
 </script>

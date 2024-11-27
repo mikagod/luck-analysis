@@ -3,6 +3,7 @@
     import nextStepBtn from '/assets/image/img/Btn下一步.png' // 导入“下一步”图片
     import Background from '@/components/container/bg.vue' // 导入背景组件 
     import Dropdown from '@/components/container/Dropdown.vue' // 导入下拉框组件
+    import { useRouter } from 'vue-router'; // 导入路由 useRouter
     import { useGlobalStore } from '@/stores/global'; // 全局状态管理实例 useGlobalStore
     import { postDataToApi } from '@/api/articles' // 导入 postDataToApi 函数
 
@@ -32,18 +33,36 @@
 
 
 
+    const router = useRouter(); // 获取路由器实例
     const global = useGlobalStore(); // 全局状态管理实例
     global.showWhiteBG = true; // 让白色下背景显示
 
+
+    // 监听按钮点击事件
+    function handleNextStepBtn(event) {
+      if (global.luckValue === "流年运气") {
+        router.push('/yearly-luck-5'); 
+      } else if(global.luckValue === "近期运气") {
+        router.push('/recent-luck-5'); 
+      } else {
+        router.push('/3'); // 如果没有选择是流年运气还是近期运气就跳转到对应页面选择
+        // event.preventDefault(); // 阻止默认行为
+      }
+    }
+
+
     // 异步数据
     const data = ref(null);
+
+    // api url 根据全局状态值动态变化
+    let api_url = global.luckValue === '流年运气' ? '/api/fleeting/instructions' : '/api/recent/instructions';
 
     // 在 mounted 生命周期钩子中调用异步函数
     onMounted(async () => {
       try {
         const response = await postDataToApi(
           global.selectedItems__Num,
-          '/api/fleeting/instructions'
+          api_url
         );
         data.value = formatContentString(response.data.content);
         console.log(data.value);
@@ -71,7 +90,8 @@
               <div class="page page-direction">
                   <Dropdown :width=dropdownComponentWidth :height=dropdownComponentHeight :bgColor="'#ffffff5c'">
                     <template #header-title>
-                        <img src="/assets/image/img/流年运气求测须知.png" alt="图片失效">
+                        <img v-if="global.luckValue === '流年运气'" src="/assets/image/img/流年运气求测须知.png" alt="图片失效">
+                        <img v-else-if="global.luckValue === '近期运气'" src="/assets/image/img/近期运气求测须知.png" alt="图片失效">
                     </template>
                     <div 
                       style="width: 100%; 
@@ -87,9 +107,9 @@
             </template>
             <!-- 按钮区 -->
             <template #btn>
-            <router-link to="/5" style="display: flex; justify-content: center; align-items: center;">
+            <div @click="handleNextStepBtn" style="display: flex; justify-content: center; align-items: center;">
                 <img class="btn" :src=nextStepBtn alt="图片失效" @click="btnClick">
-            </router-link>
+            </div>
             </template>
     </Background>
     <!-- ********************/大盒子******************** -->

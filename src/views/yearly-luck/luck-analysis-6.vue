@@ -89,6 +89,7 @@
     const selectedStore = useSelectedStore(); // 选中状态管理实例
     global.showWhiteBG = true; // 让白色下背景显示
     global.pageNum = '5'; // 确认页数 第5页
+    global.luckValue = '流年运气' // 模块设置为流年运气
 
 
     //-------------------第4页 传来的数据放pinia保存。包括视图也用这个数据--------------------------------
@@ -99,7 +100,7 @@
     console.log(`selectedItems_backup_5：`,selectedStore.selectedItems_backup_5)
     //---------------------------------------------------
     global.selectedItems_white !== undefined ? selectedStore.selectedItems_white_5 = global.selectedItems_white.map (item => {
-        return item.replace(/\/assets\/image\/img\//, '/assets/image/img/font_selectedColor/');
+        return item.replace(/\/assets\/image\/img\/font_blue\/yearly_luck\//, '/assets/image/img/font_white/yearly_luck/');
       }) : console.log('没有数据');
     console.log(`selectedItems_white_5：`,selectedStore.selectedItems_white_5)
     //---------------------------------------------------
@@ -119,7 +120,7 @@
       global.selectedItems_five = num;
       // 已选元素（白字体） => 全局状态 selectedItems_whilte_five 属性
       global.selectedItems_whilte_five = global.selectedItems_five.map(item => {
-        return item.replace(/\/src\/assets\/image\/img\//, '/src/assets/image/img/font_selectedColor/');
+        return item.replace(/\/assets\/image\/img\/font_blue\/yearly_luck\//, '/assets/image/img/font_white/yearly_luck/');
     });
     } 
 
@@ -136,7 +137,7 @@
       } else {
         // 如果没选任何选项就跳转到对应页面先选好，如果选好了就正常跳转到后面的页面
         if (global.selectedItems.length === 0 && global.selectedItems__Num.length === 0){
-          router.push('/5'); // 使用路由器实例进行跳转
+          router.push('/yearly-luck-5'); // 使用路由器实例进行跳转
         }else {
           console.log(`pinia里的selectedItems__Num状态`,global.selectedItems__Num);
           router.push('/7'); // 使用路由器实例进行跳转
@@ -160,7 +161,7 @@
       }
 
       console.log('重选');
-      router.push('/5'); // 使用路由器实例进行跳转
+      router.push('/yearly-luck-5'); // 使用路由器实例进行跳转
     }
 
     // 浏览器点回退跟重选一个效果

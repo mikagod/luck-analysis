@@ -7,9 +7,14 @@ const routes = [
   { path: '/2', component: () => import('@/views/luck-analysis-2.vue') },
   { path: '/3', component: () => import('@/views/luck-analysis-3.vue') },
   { path: '/4', component: () => import('@/views/luck-analysis-4.vue') },
-  { path: '/5', component: () => import('@/views/luck-analysis-5.vue') },
-  { path: '/6', component: () => import('@/views/luck-analysis-6.vue') },
+  { path: '/yearly-luck-5', component: () => import('@/views/yearly-luck/luck-analysis-5.vue') },
+  { path: '/yearly-luck-6', component: () => import('@/views/yearly-luck/luck-analysis-6.vue') },
+
+  { path: '/recent-luck-5', component: () => import('@/views/recent-luck/luck-analysis-5.vue') },
+  { path: '/recent-luck-6', component: () => import('@/views/recent-luck/luck-analysis-6.vue') },
+
   { path: '/7', component: () => import('@/views/luck-analysis-7.vue') },
+  
 ]
 
 // 路由实例

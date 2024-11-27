@@ -86,7 +86,7 @@
         }
     }
 
-    // 监听按钮点击事件
+    // 监听按钮点击事件（入口）
     function handleNextStepBtn(event) {
         if (global.luckValue === '') {
             event.preventDefault(); // 阻止默认行为

@@ -7,8 +7,10 @@ import itemVariant from '/assets/image/img/Property 1=Variant.png'
 import { reactive, ref, onUnmounted  } from 'vue'
 import { useGlobalStore } from '@/stores/global'; // 导入 全局状态管理实例 useGlobalStore
 import { useSelectedStore } from '@/stores/MultiSelectArraySelectedStores';
+import { useSelected_irrStore } from '@/stores/MultiSelectArray_irrStores';
 const global = useGlobalStore();
 const selectedStore = useSelectedStore();
+const selectedStore_irr = useSelected_irrStore();
 
 // 创建默认图片数组
 const itemDefaulArray = reactive(new Array(100).fill(itemDefaul)) 
@@ -67,13 +69,25 @@ function confirmHandle () {
 
         // 选项样式为 未选中
         selectedStore.selectedItems_backup_5 = selectedStore.selectedItems_backup_5.map (item => {
-            return item.replace(/\/assets\/image\/img\/font_selectedColor\//, '/assets/image/img/');
+            return item.replace(/\/assets\/image\/img\/font_white\//, '/assets/image/img/font_blue/');
         })
         itemDefaulArray[selectedIndex.value] = itemDefaul; // 恢复为未选中图标
 
         console.log('确定')
         let cicleNumber = selectedIndices.value[0]; // 数值
-        let seqNumber = selectedStore.imgUrlArray.indexOf( encodeURI(global.selectedItems_five[global.selectedItems_five.length - 1]) ) + 1 // 名称
+
+        // 这里判断是处理 流年运气模块 还是 近期运气模块
+        console.log('// 这里判断是处理 流年运气模块 还是 近期运气模块')
+        let seqNumber = null
+        if (global.luckValue === '流年运气') {
+            seqNumber = selectedStore.imgUrlArray.indexOf( encodeURI(global.selectedItems_five[global.selectedItems_five.length - 1]) ) + 1 // 名称
+        }else if (global.luckValue === '近期运气') {
+
+            // 取最后选中的选项的编号
+            seqNumber = selectedStore_irr.ids[selectedStore_irr.ids.length - 1]
+         
+        }
+        // console.log(global.luckValue)
         // console.log(`*********`, decodeURI(selectedStore.imgUrlArray))
         // console.log(`*********`, global.selectedItems_five[global.selectedItems_five.length - 1] )
         global.selectedItems__Num.push({seqNumber, cicleNumber}); // 添加数据    ***ADD***
@@ -90,19 +104,30 @@ function closeHandle () {
 
     global.showNumSelecte = false // 关闭弹窗
 
-    // 选项样式为 未选中
-    selectedStore.selectedItems_backup_5 = selectedStore.selectedItems_backup_5.map (item => {
-        return item.replace(/\/assets\/image\/img\/font_selectedColor\//, '/assets/image/img/');
-    })
-    selectedStore.to_un_5()
-    
-    selectedStore.isChecked[selectedStore.indexItem] = false // 重置选中状态
+    console.log('luckVlaue的值',global.luckValue)
 
-    const selectedIndex = selectedStore.selectedItems.indexOf(decodeURIComponent(selectedStore.selectedItems_5[selectedStore.indexItem])); // 获取索引
-    selectedStore.selectedItems.splice(selectedIndex, 1); // 删除选中的元素
+    // 如果是近期运气的话
+    if (global.luckValue === '近期运气') {
+        // 清空已选列表
+        selectedStore_irr.ids.splice(selectedStore_irr.ids.length - 1, 1)
+        // 恢复为未选中样式
+        selectedStore_irr.to_blue(selectedStore_irr.lastSelectedIndex)
+    }
+
     
-    console.log('取消选项后的内容:', selectedStore.selectedItems, `888888`);
-    
+    // 如果是流年运气的话
+    if (global.luckValue === "流年运气") {
+        // 选项样式为 未选中
+        selectedStore.selectedItems_backup_5 = selectedStore.selectedItems_backup_5.map (item => {
+            return item.replace(/\/assets\/image\/img\/font_white\//, '/assets/image/img/font_blue/');
+        })
+        selectedStore.to_un_5()
+        
+        selectedStore.isChecked[selectedStore.indexItem] = false // 重置选中状态
+
+        const selectedIndex = selectedStore.selectedItems.indexOf(decodeURIComponent(selectedStore.selectedItems_5[selectedStore.indexItem])); // 获取索引
+        selectedStore.selectedItems.splice(selectedIndex, 1); // 删除选中的元素
+    }
 
 }
 

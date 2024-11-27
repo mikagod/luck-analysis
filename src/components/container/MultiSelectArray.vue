@@ -267,12 +267,12 @@ function toggleCheck(index) {
             </div>
      </div>
     <!-- 占位小盒子 -->
-    <div class="items" :style="{ height: '0px', width: itemWidth, }"></div>
-    <div class="items" :style="{ height: '0px', width: itemWidth, }"></div>
-    <div class="items" :style="{ height: '0px', width: itemWidth, }"></div>
-    <div class="items" :style="{ height: '0px', width: itemWidth, }"></div>
-    <div class="items" :style="{ height: '0px', width: itemWidth, }"></div>
-    <div class="items" :style="{ height: '0px', width: itemWidth, }"></div>
+    <div class="items" :style="{ height: '0', width: itemWidth, }"></div>
+    <div class="items" :style="{ height: '0', width: itemWidth, }"></div>
+    <div class="items" :style="{ height: '0', width: itemWidth, }"></div>
+    <div class="items" :style="{ height: '0', width: itemWidth, }"></div>
+    <div class="items" :style="{ height: '0', width: itemWidth, }"></div>
+    <div class="items" :style="{ height: '0', width: itemWidth, }"></div>
 </div>
 
 </template>
@@ -298,6 +298,7 @@ img {
         justify-content: flex-start;
         align-items: center;
         position: relative;
+        
 
     }
         .font-item {

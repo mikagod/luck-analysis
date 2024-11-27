@@ -6,6 +6,7 @@
     import { useRouter } from 'vue-router'; // 导入路由 useRouter
     import { useGlobalStore } from '@/stores/global' // 导入 全局状态管理实例 useGlobalStore 
     import { useSelectedStore } from '@/stores/MultiSelectArraySelectedStores' // 导入多选列表组件状态管理实例 useSelectedStore
+    import { useSelected_irrStore } from '@/stores/MultiSelectArray_irrStores';
     import { postDataToApi } from '@/api/articles' // 导入 postDataToApi 函数
 
     // 下拉框组件的宽高
@@ -34,7 +35,9 @@
 
     const router = useRouter(); // 获取路由器实例
     const global = useGlobalStore(); // 全局状态管理实例
-    const selectedStore = useSelectedStore() // 多选列表状态管理实例
+    const selectedStore = useSelectedStore() // 多选列表状态管理实例 流年
+    const selectedStore_irr = useSelected_irrStore(); // 多选列表状态管理实例 近期
+
     global.showWhiteBG = false; // 让白色下背景消失
     
 
@@ -64,8 +67,8 @@
     onMounted(async () => {
       try {
         const response = await postDataToApi(
-          global.selectedItems__Num,
-          '/api/fleeting/analysisReport'
+          global.selectedItems__Num, 
+          global.luckValue === "流年运气" ? '/api/fleeting/analysisReport' : '/api/recent/analysisReport'
         );
         prefix.value = formatContentString(response.data.prefix, false, true);
         contentList.value = formatContentArray(response.data.contentList);
@@ -77,6 +80,15 @@
 
       } catch (error) {
         console.error('Error fetching data:', error);
+      }
+      // 清空参数列表
+      global.selectedItems__Num = []
+      
+      // 清空近期运气各列表
+      if (global.luckValue === "近期运气") {
+        selectedStore_irr.ids = []
+        selectedStore_irr.names = []
+        selectedStore_irr.lastSelectedIndex = -1 
       }
     });
 
