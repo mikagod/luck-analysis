@@ -3,7 +3,7 @@
     <div class="title-font">
         <slot name="header-title"></slot>      
     </div>      
-    <div class="container" :style="{ 
+    <div class="irr-container" :style="{ 
             width: width, 
             height: height, 
             backgroundColor: bgColor, 
@@ -26,8 +26,12 @@
     </template>
     
     <script lang="js" setup>
-    import { ref, onMounted } from 'vue'
+    import { ref, onMounted, watch } from 'vue'
+    import { useSelected_irrStore } from '@/stores/MultiSelectArray_irrStores' // 导入多选列表组件状态管理实例 useSelectedStore
     
+    // 获取状态管理实例
+    const selectedStore = useSelected_irrStore()
+
     // 定义 props
     const props = defineProps({
         // 宽
@@ -78,12 +82,46 @@
     onMounted(() => {
       // console.log(props.paddingBottom); // 检查传递的 background 值
     })
+
+    // 处理 选项中文字大于8导致的过宽的问题（有效，但不是最好的方法）
+    // 窗口变化的时候
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+            let container = document.querySelector('.irr-container');
+            container.style.transform = 'scale(1.0)';
+        }
+        // 使用 watch 监听 paths 的变化
+        watch(() => selectedStore.paths, (newPaths) => {
+            console.log('paths目前的长度：', newPaths.length);
+
+            if (newPaths.length > 0) {
+                newPaths.forEach((el, idx) => {
+                    // 从路径中提取 中文名
+                    const regex = /\/assets\/image\/img\/(font_blue|font_white)\/recent_luck\/([^\/]+)\.png$/;
+                    const match = el.match(regex);
+
+                    if (match && match[2]) {
+                        const name = match[2];
+                        // 如果中文字符数大于8个字，则缩小滑动框
+                        if (name.length > 8 && window.innerWidth < 768) {
+                            console.log("超过8个字的选项：", name);
+                            let container = document.querySelector('.irr-container');
+                            container.style.transform = 'scale(0.55)';
+                        }
+                    }
+                });
+            }
+        }, { deep: true }); // 深度监听数组内部的变化
+    });
+
+
+
     
     </script>
     
     <style scoped>
         /* 套着这一层 */
-        .container{
+        .irr-container{
             border-radius: 15px;
             padding: 15px;
         }
@@ -98,7 +136,8 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 30px;
+            align-content: flex-start;
+            gap: 14px;
         }
     
     
@@ -142,6 +181,10 @@
         }
     
         @media (max-width: 768px) {
+            /* 套着这一层 */
+            .container{
+                transform: scale(0.9);
+            }
             .title-font {
                 transform: scale(0.6);
             }
@@ -153,6 +196,12 @@
             /* 可滚动框样式 */
             .Dropdown {
                 gap: 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            /* 套着这一层 */
+            .container{
+                transform: scale(0.8);
             }
         }
     </style>

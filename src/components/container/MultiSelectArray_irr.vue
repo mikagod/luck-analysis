@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, computed } from 'vue';
+    import { ref, computed, watch } from 'vue';
     import { useSelected_irrStore } from '@/stores/MultiSelectArray_irrStores'
     import { useGlobalStore } from '@/stores/global'
 
@@ -58,7 +58,8 @@ function toggleCheck(index) {
         if (selectedStore.pageNum === 6) {
                     // global.showNumSelecte = false
                     selectedStore.resetChooseIcon(index); // 切换选中状态
-                    selectedStore.ids.splice(selectedStore.ids.indexOf(selectedStore.idcnMapHandler(cnString)), 1);
+                    global.selectedItems__Num.splice(selectedStore.ids.indexOf(selectedStore.idcnMapHandler(cnString)), 1) // 清除将传给后端的编号
+                    selectedStore.ids.splice(selectedStore.ids.indexOf(selectedStore.idcnMapHandler(cnString)), 1); // 清除选中的id
                     console.log('剩下的选项：',selectedStore.ids, 
                                 '\n取消的选项',selectedStore.idcnMapHandler(cnString))
         }else {
@@ -99,7 +100,6 @@ function toggleCheck(index) {
 
 
 }
-
 </script>
 
 <template>
@@ -152,7 +152,7 @@ function toggleCheck(index) {
             }
         /* 小选项 */
         .s-item {
-            width: 31%;
+            width: 32%;
             height: 85px;
         }
         /* 大选项 */
@@ -228,12 +228,12 @@ function toggleCheck(index) {
                 }
             /* 小选项 */    
             .s-item {
-                width: 45%;
+                width: 46%;
                 height: 50px;
             }
             /* 大选项 */
             .b-item {
-                width: calc(78% + 60px);
+                width: calc(80% + 60px);
                 height: 50px;
             }
             /* 占位选项 */

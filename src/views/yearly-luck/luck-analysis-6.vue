@@ -251,6 +251,14 @@
   align-items: center;
 }
 
+/* 按钮 */
+.btn {
+  width: 100%;
+  height: 100%;
+  margin: 65px 0;
+  user-select: none;
+  pointer-events: none;
+}
 /* 按钮容器 */
 .btn-p {
   display: flex; 
@@ -262,15 +270,6 @@
   display: flex; 
   justify-content: center; 
   align-items: center; 
-}
-
-/* 按钮 */
-.btn {
-  width: 100%;
-  height: 100%;
-  margin: 65px 0;
-  user-select: none;
-  pointer-events: none;
 }
 
 /* ********************媒体查询 */

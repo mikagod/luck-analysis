@@ -1,9 +1,10 @@
 <script setup>
-    import { ref, onUnmounted, onBeforeMount, onBeforeUnmount  } from 'vue'; // 导入vue相关的方法
+    import { ref, onUnmounted, onBeforeMount, onBeforeUnmount, nextTick, onMounted   } from 'vue'; // 导入vue相关的方法
     import { useRouter } from 'vue-router'; // 导入路由 useRouter
     import { useGlobalStore } from '@/stores/global'; // 导入 全局状态管理实例 useGlobalStore
     import { useSelected_irrStore } from '@/stores/MultiSelectArray_irrStores' // 导入多选列表组件状态管理实例 useSelectedStore
-    import nextStepBtn from '/assets/image/img/Btn下一步.png'; // 导入“下一步”图片
+    import clickPredict from '/assets/image/img/Btn点击预测.png'; // 导入“点击预测”图片
+    import reSelect from '/assets/image/img/Btn重新选择.png' // 导入“重新选择”图片
     import Background from '@/components/container/bg.vue'; // 导入背景组件 
     import Dropdown from '@/components/container/Dropdown_irr.vue'; // 导入下拉框组件
     import MultiSelectArray from '@/components/container/MultiSelectArray_irr.vue'; // 导入多选列表组件
@@ -73,6 +74,52 @@ global.luckValue = '近期运气';
 // 初始化已选列表
 selectedStore.getSelectedPaths()
 
+
+// 给数组按规则重新排序：为了让布局看起来好看
+const adjustArrangeArray = () => {
+      if (innerWidth > 768) { // 桌面端
+        selectedStore.paths = selectedStore.arrangeArray_l(selectedStore.paths);
+        selectedStore.paths_backup = selectedStore.arrangeArray_l(selectedStore.paths_backup);
+        selectedStore.paths_white = selectedStore.arrangeArray_l(selectedStore.paths_white);
+        console.log(selectedStore.paths_white)
+        console.log('啊走的大屏')
+
+      } else if (innerWidth < 768) { // 平板端
+        selectedStore.paths = selectedStore.arrangeArray_sm(selectedStore.paths);
+        selectedStore.paths_backup = selectedStore.arrangeArray_sm(selectedStore.paths_backup);
+        selectedStore.paths_white = selectedStore.arrangeArray_sm(selectedStore.paths_white);
+        console.log('走的小屏')
+      }
+      console.log('调整后', selectedStore.paths)
+        /**
+         *  ！！！ 由于 屏幕变化的时候如果是选中某些选项的，
+         *  选项的位置变化会导致样式出以及选中的选项不是原来的选项的bug
+         *  暂时的解决办法：在屏幕变化的后每次都会清空选项，以及设置样式为未选中状态。
+         */ 
+        // 关闭数选框
+        global.showNumSelecte = false;
+        // 清空各选项相关数组
+        selectedStore.names = []
+        selectedStore.ids = []
+        global.selectedItems__Num = [] // 清空要传给后端的编号
+        // 设置所有选项样式为未选中状态
+        selectedStore.paths.forEach((el,idx) => {
+          selectedStore.to_blue(idx)
+        });
+
+};
+onMounted(() => {
+  // 如果paths是有值的就执行一遍排序
+  if(selectedStore.paths[0] != undefined || selectedStore.paths != "" || selectedStore.paths.length != 0) {
+    adjustArrangeArray(); // 初始化一次 
+  }
+});
+window.addEventListener('resize', adjustArrangeArray) // 监听窗口尺寸变化
+onUnmounted(() => {window.removeEventListener('resize', adjustArrangeArray) }) // 清理窗口尺寸变化事件监听器
+
+
+
+
 // 把选中的名字全部转为编号并存储
 // selectedStore.ids = selectedStore.names.map(name => {
 //     return selectedStore.idcnMapHandler(name)
@@ -86,11 +133,8 @@ selectedStore.paths.forEach((path, idx) => {
   selectedStore.to_blue(idx)
 })
 
-
-
-
 // 监听按钮点击事件
-function handleNextStepBtn(event) {
+function handleClickPredict(event) {
   // 如果所选的选项与所展示的选项数量相等
   if (selectedStore.ids.length === selectedStore.paths.length) {
     router.push('/7'); // 使用路由器实例进行跳转
@@ -98,6 +142,22 @@ function handleNextStepBtn(event) {
     event.preventDefault(); // 阻止默认行为
     alert('请给所有选项选择一个数字！');
   }
+}
+
+// 监听重选按钮
+function handleReSelect() {
+  // 清空各选项相关数组
+  selectedStore.names = []
+  selectedStore.ids = []
+  global.selectedItems__Num = [] // 清空要传给后端的编号
+
+  // 设置所有选项样式为未选中状态
+  selectedStore.paths.forEach((el,idx) => {
+    selectedStore.to_blue(idx)
+  })
+
+  console.log('重选');
+  router.push('/recent-luck-5'); // 使用路由器实例进行跳转
 }
 </script>
 
@@ -134,8 +194,13 @@ function handleNextStepBtn(event) {
       </template>
       <!-- 按钮区 -->
       <template #btn>
-        <div @click="handleNextStepBtn" style="display: flex; justify-content: center; align-items: center;">
-          <img class="btn" :src="nextStepBtn" alt="图片失效">
+        <div class="btn-p">
+          <div @click="handleReSelect">
+            <img class="btn" :src="reSelect" alt="图片失效">
+          </div>
+          <div @click="handleClickPredict">
+            <img class="btn" :src="clickPredict" alt="图片失效">
+          </div>
         </div>
       </template>
     </Background>
@@ -168,6 +233,18 @@ function handleNextStepBtn(event) {
   user-select: none;
   pointer-events: none;
 }
+/* 按钮容器 */
+.btn-p {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  gap: 70px;
+}
+.btn-p > div {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
 
 /* ********************媒体查询 */
 
@@ -180,9 +257,9 @@ function handleNextStepBtn(event) {
 
 /* 中屏幕 < 1200px */
 @media screen and (max-width: 1200px) {
-  /* 按钮 */
-  .btn {
-    margin: 50px 0;
+  /* 按钮容器 */
+  .btn-p {
+    gap: 50px;
   }
 }
 
@@ -192,12 +269,16 @@ function handleNextStepBtn(event) {
   .page {
     height: 700px;
   }
+  /* 按钮容器 */
+  .btn-p {
+    gap: 0;
+    flex-direction: column;
+  }
 
   /* 按钮 */
   .btn {
     width: 50%;
     height: 50%;
-    margin: 50px 0;
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
