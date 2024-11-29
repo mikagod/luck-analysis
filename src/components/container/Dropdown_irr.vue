@@ -79,13 +79,11 @@
         }
     })
     
-    onMounted(() => {
-      // console.log(props.paddingBottom); // 检查传递的 background 值
-    })
+
 
     // 处理 选项中文字大于8导致的过宽的问题（有效，但不是最好的方法）
     // 窗口变化的时候
-    window.addEventListener('resize', () => {
+    function handle8cnCharItem(){
         if (window.innerWidth >= 768) {
             let container = document.querySelector('.irr-container');
             container.style.transform = 'scale(1.0)';
@@ -112,7 +110,12 @@
                 });
             }
         }, { deep: true }); // 深度监听数组内部的变化
-    });
+    }
+    onMounted(() => {
+        handle8cnCharItem()
+        window.addEventListener('resize', handle8cnCharItem);
+    })
+
 
 
 

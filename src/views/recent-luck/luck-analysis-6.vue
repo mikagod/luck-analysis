@@ -269,6 +269,10 @@ function handleReSelect() {
   .page {
     height: 700px;
   }
+  /* 按钮 */
+  .btn {
+    margin: 10px 0;
+  }
   /* 按钮容器 */
   .btn-p {
     gap: 0;
