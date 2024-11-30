@@ -229,7 +229,7 @@ export const useSelected_irrStore = defineStore('selected_irr', () => {
 
       const innerWidth = window.innerWidth;
 
-      if (innerWidth <= 992) { // 移动端767.98
+      if (innerWidth < 992) { // 移动端767.98
         // 黑字图片（未选中）
         imgUrlArray.value = [
             fortune,
