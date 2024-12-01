@@ -1,5 +1,7 @@
 <script setup>
     import { ref,onUnmounted, onMounted, computed } from 'vue' // 导入vue相关的方法
+    import titleYearlyLuck from '/assets/image/img/流年运气分析报告.png'
+    import titleRecentLuck from '/assets/image/img/近期运气分析报告.png'
     import exportBtn from '/assets/image/img/Btn导出.png' // 导入“导出”图片
     import Background from '@/components/container/bg.vue' // 导入背景组件 
     import Dropdown from '@/components/container/Dropdown.vue' // 导入下拉框组件
@@ -40,6 +42,10 @@
 
     global.showWhiteBG = false; // 让白色下背景消失
     
+    // 标题显示
+    const title = computed(() => {
+      return global.luckValue === "近期运气" ? titleRecentLuck : titleYearlyLuck;
+    })
 
     // 提交后触发的函数
     function btnClick() {
@@ -152,7 +158,7 @@
               <div class="page page-direction">
                   <Dropdown :width=dropdownComponentWidth :height=dropdownComponentHeight :bgColor="'#ffffff5c'" :innerHeight="'88%'">
                     <template #header-title>
-                        <img src="/assets/image/img/流年分析报告.png" alt="图片失效">
+                        <img :src="title" alt="图片失效">
                     </template>
                     
                     <div v-html="prefix" class="required-content content-api"></div>
